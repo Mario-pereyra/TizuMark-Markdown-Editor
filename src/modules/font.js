@@ -218,7 +218,7 @@
         const allSys = Array.isArray(this._systemFonts) ? this._systemFonts : [];
         const custom = this.settings.customFonts || [];
         const customIds = new Set(custom.map(f => f.id));
-        const isZh = this.settings.language !== 'en';
+        const isZh = this.settings.language === 'zh';
         // 已选中的系统字体（可能不在白名单内，但应保留显示）
         const selectedSys = new Set(['editor', 'preview', 'code'].map(k => this.settings[k + 'Font'] || '').filter(Boolean));
         // 归一：中文名/变体名条目 → 主族英文 value（FONT_LOCALE_REV）；未映射字体保持原名
@@ -280,7 +280,7 @@
         const f = (this.settings.customFonts || []).find(x => x.id === val);
         if (f) return f.name;
         // 系统字体：中文 UI 显示中文族名（如有映射），英文 UI 显示英文原名
-        const isZh = this.settings.language !== 'en';
+        const isZh = this.settings.language === 'zh';
         return (isZh && FONT_NAME_LOCALE[val]) ? FONT_NAME_LOCALE[val] : val;
       },
   };

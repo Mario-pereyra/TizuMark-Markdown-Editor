@@ -449,9 +449,9 @@
         setTimeout(doRefresh, 280);
       },
       async openUserGuide() {
-        const isEn = this.settings.language === 'en';
-        const fileName = isEn ? 'guide.en.md' : 'guide.md';
-        const tabName = isEn ? 'User Guide.md' : '使用说明.md';
+        const lang = (this.settings && this.settings.language) || 'zh';
+        const fileName = lang === 'en' ? 'guide.en.md' : (lang === 'es' ? 'guide.es.md' : 'guide.md');
+        const tabName = lang === 'en' ? 'User Guide.md' : (lang === 'es' ? 'Guía de uso.md' : '使用说明.md');
         const existingIndex = this.tabs.findIndex(t => t.name === tabName);
         if (existingIndex !== -1) {
           this.switchTab(existingIndex);
@@ -492,7 +492,7 @@
         this.activeTab.savedContent = content;
         this.activeTab.isGuide = true;
         this.updateTabDisplay();
-        this.setStatus(isEn ? this.t('openedGuideEn') : this.t('openedGuide'));
+        this.setStatus(this.t('openedGuide'));
       },
       async _openBundledFile(href, content, filePath = null) {
         const name = filePath ? filePath.split(/[/\\]/).pop() : href.split(/[/\\]/).pop();

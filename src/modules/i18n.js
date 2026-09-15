@@ -8,12 +8,12 @@
 
   const mixin = {
       t(key, params = {}) {
-        const lang = this.settings.language === 'en' ? 'en' : 'zh';
-        let text = I18N[lang][key];
+        const lang = (this.settings && I18N[this.settings.language]) ? this.settings.language : 'zh';
+        let text = I18N[lang] ? I18N[lang][key] : undefined;
         if (text === undefined) {
-          text = I18N.zh[key] || key;
+          text = (I18N.en && I18N.en[key] !== undefined) ? I18N.en[key] : ((I18N.zh && I18N.zh[key]) || key);
         }
-        if (text && params) {
+        if (typeof text === 'string' && params) {
           for (const [k, v] of Object.entries(params)) {
             text = text.replace('{' + k + '}', v);
           }

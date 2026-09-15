@@ -2,7 +2,7 @@
 
 **TizuMark** is a lightweight, open-source **Markdown editor** for Windows with WYSIWYG live preview, outline navigation, KaTeX & Mermaid support — a free **Typora alternative** built with Tauri + Rust.
 
-🌐 **简体中文** | [English](README.en.md)
+🌐 **简体中文** | [English](README.en.md) | [Español](README.es.md)
 
 <div align="center">
 

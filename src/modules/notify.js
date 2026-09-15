@@ -101,9 +101,9 @@
       },
       // 统一错误上报：用户友好提示 + 开发可诊断（错误码 + 上下文写入 console）
       reportError(code, opts = {}) {
-        const lang = this.settings && this.settings.language === 'en' ? 'en' : 'zh';
+        const lang = (this.settings && this.settings.language) || 'zh';
         const dict = ERROR_MESSAGES[code] || {};
-        const entry = dict[lang] || dict.zh || { title: code, detail: '' };
+        const entry = dict[lang] || dict.en || dict.zh || { title: code, detail: '' };
         let detail = opts.detail || entry.detail || '';
         if (detail && opts.params) {
           for (const [k, v] of Object.entries(opts.params)) {

@@ -388,6 +388,7 @@
             optionsProvider: (t) => ([
               { value: 'zh', label: t('langZh') },
               { value: 'en', label: t('langEn') },
+              { value: 'es', label: t('langEs') },
             ]),
             onChange: (v) => { this.settings.language = v; },
           });

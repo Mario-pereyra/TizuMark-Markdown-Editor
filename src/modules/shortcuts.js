@@ -296,8 +296,26 @@
           { combo: 'Tab', group: 'edit', name: 'Indent', desc: 'Add one level of indent to the line or selection' },
           { combo: 'Shift+Tab', group: 'edit', name: 'Outdent', desc: 'Remove one level of indent from the line or selection' },
         ];
+        const ES = [
+          { combo: 'Ctrl+Home', group: 'nav', name: 'Ir al inicio', desc: 'Mueve el cursor al principio del documento' },
+          { combo: 'Ctrl+End', group: 'nav', name: 'Ir al final', desc: 'Mueve el cursor al final del documento' },
+          { combo: 'Shift+Ctrl+Home', group: 'nav', name: 'Seleccionar al inicio', desc: 'Selecciona desde el cursor hasta el inicio del documento' },
+          { combo: 'Shift+Ctrl+End', group: 'nav', name: 'Seleccionar al final', desc: 'Selecciona desde el cursor hasta el final del documento' },
+          { combo: 'Ctrl+ArrowLeft', group: 'nav', name: 'Palabra a la izquierda', desc: 'Mueve el cursor una palabra completa a la izquierda' },
+          { combo: 'Ctrl+ArrowRight', group: 'nav', name: 'Palabra a la derecha', desc: 'Mueve el cursor una palabra completa a la derecha' },
+          { combo: 'Shift+Ctrl+ArrowLeft', group: 'nav', name: 'Seleccionar palabra izq.', desc: 'Mantiene Shift para seleccionar palabras hacia la izquierda' },
+          { combo: 'Shift+Ctrl+ArrowRight', group: 'nav', name: 'Seleccionar palabra der.', desc: 'Mantiene Shift para seleccionar palabras hacia la derecha' },
+          { combo: 'Ctrl+Z', group: 'edit', name: 'Deshacer', desc: 'Deshace la última acción' },
+          { combo: 'Ctrl+Y', group: 'edit', name: 'Rehacer', desc: 'Rehace la última acción deshecha' },
+          { combo: 'Ctrl+A', group: 'edit', name: 'Seleccionar todo', desc: 'Selecciona todo el contenido del editor' },
+          { combo: 'Ctrl+C', group: 'edit', name: 'Copiar', desc: 'Copia el texto seleccionado al portapapeles' },
+          { combo: 'Ctrl+X', group: 'edit', name: 'Cortar', desc: 'Corta el texto seleccionado al portapapeles' },
+          { combo: 'Ctrl+V', group: 'edit', name: 'Pegar', desc: 'Pega el contenido del portapapeles en la posición del cursor' },
+          { combo: 'Tab', group: 'edit', name: 'Aumentar sangría', desc: 'Añade un nivel de sangría a la línea o selección' },
+          { combo: 'Shift+Tab', group: 'edit', name: 'Reducir sangría', desc: 'Reduce un nivel de sangría a la línea o selección' },
+        ];
         const lang = (this.settings && this.settings.language) || 'zh';
-        return lang === 'en' ? EN : ZH;
+        return lang === 'en' ? EN : (lang === 'es' ? ES : ZH);
       },
       // 把任意来源的键位字符串规范化为「小写修饰键 + 小写主键」的规范串，
       // 用于冲突比对（不区分 Ctrl/Control、修饰键顺序、字母大小写）。

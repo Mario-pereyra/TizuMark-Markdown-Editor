@@ -384,9 +384,9 @@ function tInit(key) {
   let lang = 'zh';
   try {
     const saved = JSON.parse(localStorage.getItem('tizumark-settings') || '{}');
-    if (saved && saved.language === 'en') lang = 'en';
+    if (saved && saved.language && I18N[saved.language]) lang = saved.language;
   } catch (_) {}
-  return I18N[lang][key] !== undefined ? I18N[lang][key] : I18N.zh[key] || key;
+  return (I18N[lang] && I18N[lang][key] !== undefined) ? I18N[lang][key] : (I18N.zh && I18N.zh[key]) || key;
 }
 
 function initEula() {

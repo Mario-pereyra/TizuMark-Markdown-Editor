@@ -19,22 +19,27 @@ function extractI18N() {
   return new Function('return ' + m[0].replace(/^[\s\S]*?const I18N = /, '').replace(/;\s*$/, ''))();
 }
 
-test('i18n: zh/en 字典键集合一致', async () => {
+test('i18n: zh/en/es 字典键集合一致', async () => {
   const I18N = extractI18N();
   const zh = Object.keys(I18N.zh);
   const en = Object.keys(I18N.en);
+  const es = Object.keys(I18N.es);
   // 已知遗留死键：en.failedGuideEn 无引用且 zh 缺失（t() 会回退，不影响运行）
   const knownOrphans = ['failedGuideEn'];
   const missEn = zh.filter((k) => !(k in I18N.en));
   const missZh = en.filter((k) => !(k in I18N.zh) && !knownOrphans.includes(k));
+  const missEs = zh.filter((k) => !(k in I18N.es));
+  const extraEs = es.filter((k) => !(k in I18N.zh) && !knownOrphans.includes(k));
   assert.deepStrictEqual(missEn, [], 'zh 中每个键 en 都应有翻译');
   assert.deepStrictEqual(missZh, [], 'en 不应出现 zh 没有的新键（白名单除外）');
+  assert.deepStrictEqual(missEs, [], 'zh 中每个键 es 都应有翻译');
+  assert.deepStrictEqual(extraEs, [], 'es 不应出现 zh 没有的新键（白名单除外）');
   assert.ok(zh.length > 300, '字典规模合理（>300 键）');
 });
 
 test('i18n: 字典值均为非空字符串', async () => {
   const I18N = extractI18N();
-  for (const lang of ['zh', 'en']) {
+  for (const lang of ['zh', 'en', 'es']) {
     for (const [k, v] of Object.entries(I18N[lang])) {
       if (typeof v === 'object' && v !== null) {
         // 允许嵌套映射（如 shortcutLabel），其内部值须为非空字符串
@@ -57,26 +62,28 @@ test('i18n: t() 按语言取值且支持 {param} 插值', async () => {
     assert.strictEqual(ed.t('file'), '文件');
     ed.settings.language = 'en';
     assert.strictEqual(ed.t('file'), 'File');
+    ed.settings.language = 'es';
+    assert.strictEqual(ed.t('file'), 'Archivo');
     // 插值：找一个含 {} 占位符的键做真实验证
     const I18N = extractI18N();
     const kv = Object.entries(I18N.zh).find(([, v]) => /\{(\w+)\}/.test(v));
     assert.ok(kv, '字典中应存在含占位符的键');
     const [key, tpl] = kv;
     const pname = tpl.match(/\{(\w+)\}/)[1];
-    ed.settings.language = 'zh';
+    ed.settings.language = 'es';
     const out = ed.t(key, { [pname]: 'XYZ42' });
     assert.ok(out.includes('XYZ42'), '占位符应被替换');
     assert.ok(!out.includes('{' + pname + '}'), '不应残留占位符');
   } finally { cleanup(w); }
 });
 
-test('i18n: t() en 缺键回退 zh，未知键返回键名', async () => {
+test('i18n: t() en/es 缺键回退 zh，未知键返回键名', async () => {
   const { w, ed } = await makeEditor();
   try {
     ed.settings.language = 'en';
     assert.strictEqual(ed.t('__no_such_key__'), '__no_such_key__', '未知键应原样返回');
-    ed.settings.language = 'fr'; // 非 en 一律按 zh
-    assert.strictEqual(ed.t('file'), '文件', '非 en 语言应按 zh 处理');
+    ed.settings.language = 'fr'; // 未知语言一律按 zh
+    assert.strictEqual(ed.t('file'), '文件', '未知语言应按 zh 处理');
   } finally { cleanup(w); }
 });
 
@@ -90,6 +97,10 @@ test('i18n: applyLanguage 切换工具栏/菜单文案', async () => {
     ed.applyLanguage();
     assert.strictEqual(fileSpan.textContent, 'File');
     assert.strictEqual(newSpan.textContent, 'New');
+    ed.settings.language = 'es';
+    ed.applyLanguage();
+    assert.strictEqual(fileSpan.textContent, 'Archivo');
+    assert.strictEqual(newSpan.textContent, 'Nuevo');
     ed.settings.language = 'zh';
     ed.applyLanguage();
     assert.strictEqual(fileSpan.textContent, '文件');
